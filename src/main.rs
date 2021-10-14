@@ -89,5 +89,6 @@ fn rocket() -> _ {
             "/",
             routes![auth::login, files, upload, download, delete_file],
         )
+        .mount("/", rocket::fs::FileServer::from("./static"))
         .attach(cors)
 }
