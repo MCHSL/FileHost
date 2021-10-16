@@ -25,6 +25,8 @@ pub struct Config {
     pub port: u16,
     #[envconfig(from = "FILEHOST_MAX_FILE_SIZE", default = "50MB")]
     pub max_file_size: String,
+	#[envconfig(from = "FILEHOST_NO_AUTH", default = "false")]
+	pub no_auth: bool,
 }
 
 #[launch]

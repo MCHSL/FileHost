@@ -13,6 +13,11 @@ impl<'r> FromRequest<'r> for TokenChecker {
     type Error = &'static str;
 
     async fn from_request(req: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
+		if let Some(config) = req.guard::<&State<crate::Config>>().await.succeeded() {
+			if config.no_auth {
+				return Outcome::Success(Self);
+			}
+		}
         if let Some(tokens) = req.guard::<&State<ValidTokens>>().await.succeeded() {
             let tokens = tokens.lock().unwrap();
             if let Some(auth) = req.headers().get_one("Authorization") {

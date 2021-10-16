@@ -37,6 +37,9 @@ pub fn login(
     tokens: &State<crate::guards::ValidTokens>,
     config: &State<crate::Config>,
 ) -> AuthResult {
+	if config.no_auth {
+		return AuthResult::Ok(json!({ "token": "NO AUTH" }));
+	}
     let auth = GoogleAuthenticator::new();
     let secret = &config.auth_secret;
 

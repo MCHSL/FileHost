@@ -1,7 +1,8 @@
 use crate::guards::TokenChecker;
 use rocket::form::Form;
+use rocket::fs::FileName;
 use rocket::fs::{NamedFile, TempFile};
-use rocket::serde::{json::Json, Serialize};
+use rocket::serde::{json::Json, Deserialize, Serialize};
 use rocket::State;
 
 #[derive(Serialize)]
@@ -84,4 +85,20 @@ pub async fn delete_file(
 ) -> std::io::Result<()> {
     let path = std::path::Path::new(&config.file_directory).join(file);
     std::fs::remove_file(path)
+}
+
+#[derive(Deserialize)]
+pub struct RenameRequest {
+    new_name: String,
+}
+
+#[patch("/file/<file..>", data = "<name>")]
+pub fn rename(
+    file: std::path::PathBuf,
+    name: Json<RenameRequest>,
+    config: &State<crate::Config>,
+    _token: TokenChecker,
+) -> std::io::Result<()> {
+    let path = std::path::Path::new(&config.file_directory).join(file);
+    std::fs::rename(path, &name.new_name)
 }
