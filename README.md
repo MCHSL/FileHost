@@ -1,0 +1,1 @@
+Software for online file storage and transfer. Uses Google Authenticator to auth users. Designed for personal use, may contain security flaws, so don't give access to untrusted users.
